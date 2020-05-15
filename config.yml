@@ -1,0 +1,31 @@
+_format_version: "1.1"
+
+services:
+  - name: httpbin1
+    url: https://httpbin.org/
+    routes:
+      - name: httpbin1
+        paths:
+          - /httpbin1
+    plugins:
+      - name: rate-limiting
+        config:
+          second: 1
+          policy: local
+          limit_by: ip
+      - name: go-key-checker
+        config:
+          apikey: mysecretconsumerkey
+
+  - name: httpbin2
+    url: https://httpbin.org/
+    routes:
+      - name: httpbin2
+        paths:
+          - /httpbin2
+    plugins:
+      - name: rate-limiting
+        config:
+          second: 3
+          policy: local
+          limit_by: ip

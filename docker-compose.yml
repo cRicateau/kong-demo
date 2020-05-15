@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  kong:
+    build: .
+    restart: always
+    environment:
+      KONG_DATABASE: "off"
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
+      KONG_DECLARATIVE_CONFIG: /etc/kong/config.yml
+      KONG_GO_PLUGINS_DIR: /tmp/go-plugins
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://kong:8001"]
+      interval: 5s
+      timeout: 2s
+      retries: 15
+    ports:
+      - "8001:8001"
+      - "8000:8000"
+      - "8444:8444"
+    volumes:
+      - ./kong.yml:/etc/kong/kconfigong.yml # already copied from the Dockerfile
+      - ./kong.conf:/etc/kong/kong.conf
